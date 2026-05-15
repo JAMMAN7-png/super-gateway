@@ -260,7 +260,8 @@ func (s *Server) setupRoutes() {
 		s.app.Get(s.config.Metrics.Path, s.handleMetrics)
 	}
 
-	// Dashboard page
+	// Dashboard page (SPA - Mantine at root and /dashboard)
+	s.app.Get("/", s.handleDashboard)
 	s.app.Get("/dashboard", s.handleDashboard)
 
 	// Virtual key management
