@@ -1,0 +1,58 @@
+version: "3.9"
+
+services:
+  gateway:
+    build: .
+    container_name: super-gateway
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./config.yaml:/etc/gateway/config.yaml:ro
+    environment:
+      # Free tier providers — multi-key: comma-separated in env vars
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - CEREBRAS_API_KEY=${CEREBRAS_API_KEY}
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
+      - CLOUDFLARE_API_TOKEN=${CLOUDFLARE_API_TOKEN}
+      - CLOUDFLARE_ACCOUNT_ID=${CLOUDFLARE_ACCOUNT_ID}
+      - NOVITA_API_KEY=${NOVITA_API_KEY}
+      - CHUTES_API_KEY=${CHUTES_API_KEY}
+      - NVIDIA_NIM_API_KEY=${NVIDIA_NIM_API_KEY}
+      # Paid providers
+      - OPENCODE_API_KEY=${OPENCODE_API_KEY}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - NANOGPT_API_KEY=${NANOGPT_API_KEY}
+      - VERCEL_AI_GATEWAY_KEY=${VERCEL_AI_GATEWAY_KEY}
+      - OLLAMA_API_KEY=${OLLAMA_API_KEY}
+    restart: unless-stopped
+    networks:
+      - gateway-net
+
+  # Self-hosted SearXNG for web search (optional but recommended)
+  searxng:
+    image: searxng/searxng:latest
+    container_name: searxng
+    ports:
+      - "8081:8080"
+    volumes:
+      - ./searxng/settings.yml:/etc/searxng/settings.yml:ro
+      - ./searxng/limiter.toml:/etc/searxng/limiter.toml:ro
+    environment:
+      - SEARXNG_BASE_URL=http://localhost:8080
+    restart: unless-stopped
+    networks:
+      - gateway-net
+
+  # Optional: Redis for distributed cache (shared across gateway replicas)
+  redis:
+    image: redis:7-alpine
+    container_name: gateway-redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    networks:
+      - gateway-net
+
+networks:
+  gateway-net:
+    driver: bridge

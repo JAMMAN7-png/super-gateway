@@ -1,0 +1,30 @@
+[Unit]
+Description=Super AI Gateway - Multi-Provider LLM Router
+After=network.target docker.service
+Wants=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root/goozway/super-gateway
+EnvironmentFile=/root/goozway/super-gateway/.env
+Environment=PORT=3000
+Environment=MASTER_KEY=%MASTER_KEY%
+ExecStart=/root/goozway/super-gateway/gateway --config /root/goozway/super-gateway/config.yaml
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=super-gateway
+
+# Security hardening
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/root/goozway/super-gateway/data
+ReadOnlyPaths=/root/goozway/super-gateway/config.yaml
+PrivateTmp=yes
+
+[Install]
+WantedBy=multi-user.target

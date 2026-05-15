@@ -1,0 +1,80 @@
+# SearXNG settings for Super AI Gateway
+# Enables JSON API + broad engine selection
+
+use_default_settings: true
+
+general:
+  instance_name: "Super Gateway Search"
+  debug: false
+  privacypolicy_url: false
+  contact_url: false
+  enable_metrics: false
+
+search:
+  safe_search: 0
+  autocomplete: ""
+  default_lang: ""
+  formats:
+    - html
+    - json          # REQUIRED: enables the JSON API for our gateway
+
+server:
+  secret_key: "change-me-to-random-string"  # generate: openssl rand -hex 32
+  bind_address: "0.0.0.0"
+  port: 8080
+  limiter: false    # We handle rate limiting ourselves
+  image_proxy: false
+  # Public URL of your SearXNG instance
+  base_url: "http://localhost:8080"
+
+ui:
+  static_use_hash: true
+  default_theme: simple
+  default_locale: en
+
+# Engines — enable the ones you want. More engines = more results but slower.
+engines:
+  # General web search
+  - name: google
+    engine: google
+    shortcut: g
+    disabled: false
+
+  - name: duckduckgo
+    engine: duckduckgo
+    shortcut: ddg
+    disabled: false
+
+  - name: brave
+    engine: brave
+    shortcut: br
+    disabled: true     # Requires API key
+
+  - name: bing
+    engine: bing
+    shortcut: bi
+    disabled: true     # Often rate-limited without key
+
+  - name: wikipedia
+    engine: wikipedia
+    shortcut: wp
+    disabled: false
+
+  - name: github
+    engine: github
+    shortcut: gh
+    disabled: false
+
+  - name: arxiv
+    engine: arxiv
+    categories: science
+    shortcut: arx
+    disabled: false
+
+outgoing:
+  request_timeout: 10.0
+  max_request_timeout: 15.0
+  useragent_suffix: ""
+  # If you need SearXNG itself to use a proxy:
+  # proxies:
+  #   all://: socks5://proxy:1080

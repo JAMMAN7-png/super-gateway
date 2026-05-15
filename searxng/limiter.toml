@@ -1,0 +1,12 @@
+# SearXNG rate limiter — we manage rate limits at the gateway level
+# This just prevents abuse of the search engine itself
+
+[botdetection.ip_limit]
+# Activate link token method
+link_token = true
+# Enable IP rate limiter
+ip_limit = true
+
+[botdetection.ip_lists]
+block_ip = []
+pass_ip = []
