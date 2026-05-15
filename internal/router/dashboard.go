@@ -819,7 +819,7 @@ function FusionPage() {
 // ================================================================
 function App() {
   var _useState18 = useHash(), hash = _useState18[0], navigate = _useState18[1];
-  var page = hash.slice(1) || 'dashboard';
+  var page = (hash.slice(1) || 'dashboard').replace(/^\//, '');
 
   var content;
   if (page === 'chat') content = h(ChatPage);
